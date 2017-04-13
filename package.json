@@ -1,0 +1,26 @@
+{
+  "name": "platzigram-db",
+  "version": "0.1.0",
+  "description": "Platzigram DB client",
+  "main": "index.js",
+  "scripts": {
+    "lint": "standard",
+    "test": "npm run lint && ava"
+  },
+  "standard": {
+    "parser": "babel-eslint"
+  },
+  "author": "Henry de la Hoz",
+  "license": "MIT",
+  "devDependencies": {
+    "ava": "^0.18.2",
+    "babel-eslint": "^7.2.1",
+    "standard": "^9.0.2",
+    "uuid-base62": "^0.1.0"
+  },
+  "dependencies": {
+    "bluebird": "^3.5.0",
+    "co": "^4.6.0",
+    "rethinkdb": "^2.3.3"
+  }
+}
