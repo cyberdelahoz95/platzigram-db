@@ -28,6 +28,7 @@ test('save image', async t => {
   t.is(typeof db.saveImage, 'function', 'saveImage is function')
 
   let image = {
+    description: 'an #awesome picture #platzi',
     url: `https://platzigram.test/${uuid.v4()}.jpg`,
     likes: 0,
     liked: false,
@@ -37,6 +38,9 @@ test('save image', async t => {
   let created = await db.saveImage(image)
 
   t.is(created.url, image.url)
+  t.is(created.description, image.description)
+  t.deepEqual(created.tags, ['awesome', 'platzi'])
+  t.is(created.public_id, uuid.encode(created.id))
   t.is(created.likes, image.likes)
   t.is(created.liked, image.liked)
   t.is(created.user_id, image.user_id)
