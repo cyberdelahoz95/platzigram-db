@@ -5,6 +5,7 @@ const uuid = require('uuid-base62')
 const Db = require('../')
 const r = require('rethinkdb')
 const fixtures = require('./fixtures')
+const utils = require('../lib/utils')
 
 // AVA permite generar hooks que se ejecutan antes o despues de ejecutar una prueba, en este caso se usa el hook before
 test.beforeEach('setup database', async t => {
@@ -68,6 +69,8 @@ test('get image', async t => {
   let created = await db.saveImage(image)
   let result = await db.getImage(created.public_id)
   t.deepEqual(created, result)
+
+  t.throws(db.getImage('foo'), /not found/)
 })
 
 test('list all images', async t => {
@@ -78,4 +81,55 @@ test('list all images', async t => {
   let result = await db.getImages()
 
   t.is(created.length, result.length)
+})
+
+test('save user', async t => {
+  let db = t.context.db
+
+  t.is(typeof db.saveUser, 'function', 'saveUser is a function')
+
+  let user = fixtures.getUser()
+  let plainPassword = user.password
+  let created = await db.saveUser(user)
+
+  t.is(user.username, created.username)
+  t.is(user.email, created.email)
+  t.is(user.name, created.name)
+  t.is(utils.encrypt(plainPassword), created.password)
+  t.is(typeof created.id, 'string')
+  t.truthy(created.createdAt)
+})
+
+test('get user', async t => {
+  let db = t.context.db
+
+  t.is(typeof db.getUser, 'function', 'getUser is a function')
+
+  let user = fixtures.getUser()
+  let created = await db.saveUser(user)
+  let result = await db.getUser(user.username)
+
+  t.deepEqual(created, result)
+
+  t.throws(db.getUser('foo'), /not found/)
+})
+
+test('authenticate user', async t => {
+  let db = t.context.db
+
+  t.is(typeof db.authenticate, 'function', 'authenticate is a function')
+
+  let user = fixtures.getUser()
+  let plainPassword = user.password
+  await db.saveUser(user)
+
+  let success = await db.authenticate(user.username, plainPassword)
+  t.true(success)
+
+  let fail = await db.authenticate(user.username, 'foo') // only password is wrong
+  t.false(fail)
+
+  let failure = await db.authenticate('foo', 'bar') // both username and password are wrong
+
+  t.false(failure)
 })

@@ -1,0 +1,9 @@
+este comando se hace en la terminal, para generar un
+código encriptado de la contraseña que se utilizará para probar
+el test encrypt password
+
+node
+crypto = require ("crypto")
+shasum = crypto.createHash('sha256')
+shasum.update('foo123) // valor a encriptar
+shasum.digest('hex') /obtener el hexadecimal del valor encriptado
