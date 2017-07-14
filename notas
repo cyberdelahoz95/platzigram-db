@@ -7,3 +7,8 @@ crypto = require ("crypto")
 shasum = crypto.createHash('sha256')
 shasum.update('foo123) // valor a encriptar
 shasum.digest('hex') /obtener el hexadecimal del valor encriptado
+
+
+comando para iniciar servicio de rethinkdb
+
+rethinkdb --bind all

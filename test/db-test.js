@@ -75,7 +75,7 @@ test('get image', async t => {
 
 test('list all images', async t => {
   let db = t.context.db
-  let images = fixtures.getImages()
+  let images = fixtures.getImages(3)
   let saveImages = images.map(img => db.saveImage(img))
   let created = await Promise.all(saveImages)
   let result = await db.getImages()
